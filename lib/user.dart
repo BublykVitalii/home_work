@@ -5,14 +5,14 @@ class User {
   final String? lastName;
   final int? age;
   final Sex? sex;
-  final int? height;
-  final int? weight;
+  final double? height;
+  final double? weight;
   final List<Car> cars;
   final int? phone;
 
   User({
-    this.firstName,
-    this.lastName,
+    required this.firstName,
+    required this.lastName,
     this.age,
     this.sex,
     this.height,

@@ -19,13 +19,13 @@ class UserInfo extends StatefulWidget {
 }
 
 class _UserInfoState extends State<UserInfo> {
-  String firstNameChanged = '';
-  String lastNameChanged = '';
-  String phoneChanged = '';
-  String ageChanged = '';
-  String heightChanged = '';
-  String weightChanged = '';
-  String sexChanged = '';
+  String firstName = '';
+  String lastName = '';
+  int? phone;
+  int? age;
+  double? height;
+  double? weight;
+  String sex = '';
 
   @override
   Widget build(BuildContext context) {
@@ -38,24 +38,14 @@ class _UserInfoState extends State<UserInfo> {
             onPressed: () {
               widget.onAdd(
                 User(
-                  firstName: firstNameChanged.isNotEmpty
-                      ? firstNameChanged
-                      : widget.user.firstName,
-                  lastName: lastNameChanged.isNotEmpty
-                      ? lastNameChanged
-                      : widget.user.lastName,
-                  age: ageChanged.isNotEmpty
-                      ? int.tryParse(ageChanged)
-                      : widget.user.age,
-                  phone: phoneChanged.isNotEmpty
-                      ? int.tryParse(phoneChanged)
-                      : widget.user.phone,
-                  height: heightChanged.isNotEmpty
-                      ? int.tryParse(heightChanged)
-                      : widget.user.height,
-                  weight: weightChanged.isNotEmpty
-                      ? int.tryParse(weightChanged)
-                      : widget.user.weight,
+                  firstName:
+                      firstName.isNotEmpty ? firstName : widget.user.firstName,
+                  lastName:
+                      lastName.isNotEmpty ? lastName : widget.user.lastName,
+                  age: age != null ? age : widget.user.age,
+                  phone: phone != null ? phone : widget.user.phone,
+                  height: height != null ? height : widget.user.height,
+                  weight: weight != null ? weight : widget.user.weight,
                   cars: [Car(name: '', color: '')],
                 ),
               );
@@ -74,42 +64,42 @@ class _UserInfoState extends State<UserInfo> {
             ),
             TextFieldWidget(
               onChangedText: (String value) {
-                firstNameChanged = value;
+                firstName = value;
               },
               initialText: widget.user.firstName,
               textHint: 'name',
             ),
             TextFieldWidget(
               onChangedText: (String value) {
-                lastNameChanged = value;
+                lastName = value;
               },
               initialText: widget.user.lastName,
               textHint: 'name',
             ),
             TextFieldWidget(
               onChangedText: (String value) {
-                phoneChanged = value;
+                phone = int.tryParse(value);
               },
               initialText: widget.user.phone?.toString(),
               textHint: 'number phone',
             ),
             TextFieldWidget(
               onChangedText: (String value) {
-                ageChanged = value;
+                age = int.tryParse(value);
               },
               initialText: widget.user.age?.toString(),
               textHint: 'age',
             ),
             TextFieldWidget(
               onChangedText: (String value) {
-                heightChanged = value;
+                height = double.tryParse(value);
               },
               initialText: widget.user.height?.toString(),
               textHint: 'height',
             ),
             TextFieldWidget(
               onChangedText: (String value) {
-                weightChanged = value;
+                weight = double.tryParse(value);
               },
               initialText: widget.user.weight?.toString(),
               textHint: 'weight',
