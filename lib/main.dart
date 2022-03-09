@@ -54,6 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: (user) {
                 setState(() => userService.deleteUser(user));
               },
+              onChangedUser: (User value, index) {
+                setState(() => userService.updatedUser(value, index));
+              },
             )
           : NoUsersTiles(title: 'No Users'),
       floatingActionButton: FloatingActionButton(
@@ -74,10 +77,13 @@ class _MyHomePageState extends State<MyHomePage> {
 class UserTiles extends StatelessWidget {
   final List<User> users;
   final ValueChanged<User> onPressed;
+  final Function(User user, int index) onChangedUser;
+
   const UserTiles({
     Key? key,
     required this.users,
     required this.onPressed,
+    required this.onChangedUser,
   }) : super(key: key);
 
   @override
@@ -92,8 +98,10 @@ class UserTiles extends StatelessWidget {
               context,
               MaterialPageRoute<void>(
                 builder: (context) => UserInfo(
-                  user: user,
-                ),
+                    user: user,
+                    onAdd: (user) {
+                      onChangedUser(user, index);
+                    }),
               ),
             );
           },
@@ -183,12 +191,7 @@ class AddUser extends StatelessWidget {
               User(
                 firstName: firstName,
                 lastName: lastName,
-                age: 25,
                 cars: [Car(name: '', color: '')],
-                height: 173,
-                phone: 380661231236,
-                sex: Sex.male,
-                weight: 63,
               ),
             );
             Navigator.pop(context);
@@ -203,4 +206,3 @@ class AddUser extends StatelessWidget {
 
 
 
-//  возрост/пол/вес/телефон/ФИ/машины

@@ -22,8 +22,7 @@ class UserService {
   List<User> get users => _users;
   void deleteUser(User user) => _users.remove(user);
   void addUser(User user) => _users.add(user);
-
-  // List<User> get addUser =>
-  //     users..add(User(firstName: firstName, lastName: lastName));
-
+  void updatedUser(User user, int index) {
+    _users[index] = user;
+  }
 }
