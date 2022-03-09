@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:user_manager/user_info.dart';
+import 'package:user_manager/user.dart';
+import 'package:user_manager/user_info_screen.dart';
 import 'package:user_manager/user_service.dart';
-
-import 'user.dart';
 
 void main() {
   runApp(const MyApp());
@@ -54,15 +53,16 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: (user) {
                 setState(() => userService.deleteUser(user));
               },
-              onChangedUser: (User value, index) {
-                setState(() => userService.updatedUser(value, index));
+              service: userService,
+              onChangedUser: (User value, i) {
+                setState(() => userService.updatedUser(value));
               },
             )
           : NoUsersTiles(title: 'No Users'),
       floatingActionButton: FloatingActionButton(
         onPressed: () => showDialog<String>(
           context: context,
-          builder: (BuildContext context) => AddUser(
+          builder: (BuildContext context) => AddUserDialog(
             onAdd: (value) {
               setState(() => userService.addUser(value));
             },
@@ -77,12 +77,14 @@ class _MyHomePageState extends State<MyHomePage> {
 class UserTiles extends StatelessWidget {
   final List<User> users;
   final ValueChanged<User> onPressed;
+  final UserService service;
   final Function(User user, int index) onChangedUser;
 
   const UserTiles({
     Key? key,
     required this.users,
     required this.onPressed,
+    required this.service,
     required this.onChangedUser,
   }) : super(key: key);
 
@@ -97,9 +99,10 @@ class UserTiles extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute<void>(
-                builder: (context) => UserInfo(
+                builder: (context) => UserInfoScreen(
                     user: user,
-                    onAdd: (user) {
+                    service: service,
+                    onUpdate: (user) {
                       onChangedUser(user, index);
                     }),
               ),
@@ -144,39 +147,55 @@ class NoUsersTiles extends StatelessWidget {
   }
 }
 
-class AddUser extends StatelessWidget {
+class AddUserDialog extends StatelessWidget {
   final ValueChanged<User> onAdd;
 
-  const AddUser({Key? key, required this.onAdd}) : super(key: key);
+  const AddUserDialog({Key? key, required this.onAdd}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     String firstName = '';
     String lastName = '';
+    final _formKey = GlobalKey<FormState>();
     return AlertDialog(
       title: const Center(
         child: Text('Add user'),
       ),
-      content: SingleChildScrollView(
-        child: Column(
-          children: [
-            TextField(
-              onChanged: (text) {
-                firstName = text;
-              },
-              decoration: const InputDecoration(
-                label: Text('First name'),
+      content: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter first name';
+                  }
+                  return null;
+                },
+                onChanged: (text) {
+                  firstName = text;
+                },
+                decoration: const InputDecoration(
+                  label: Text('First name'),
+                ),
               ),
-            ),
-            TextField(
-              onChanged: (text) {
-                lastName = text;
-              },
-              decoration: const InputDecoration(
-                label: Text('Last name'),
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter last name';
+                  }
+                  return null;
+                },
+                onChanged: (text) {
+                  lastName = text;
+                },
+                decoration: const InputDecoration(
+                  label: Text('Last name'),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       actions: <Widget>[
@@ -187,22 +206,19 @@ class AddUser extends StatelessWidget {
         TextButton(
           child: const Text('Add'),
           onPressed: () {
-            onAdd(
-              User(
-                firstName: firstName,
-                lastName: lastName,
-                cars: [Car(name: '', color: '')],
-              ),
-            );
-            Navigator.pop(context);
+            if (_formKey.currentState!.validate()) {
+              onAdd(
+                User(
+                  firstName: firstName,
+                  lastName: lastName,
+                  cars: [],
+                ),
+              );
+              Navigator.pop(context);
+            }
           },
         ),
       ],
     );
   }
 }
-
-// что бы создать обьект нам достаточно написать название класса и открыть круглые скобки)
-
-
-

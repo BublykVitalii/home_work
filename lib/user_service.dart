@@ -1,6 +1,4 @@
-import 'package:user_manager/main.dart';
-
-import 'user.dart';
+import 'package:user_manager/user.dart';
 
 class UserService {
   final _users = <User>[
@@ -13,7 +11,7 @@ class UserService {
         Car(name: 'Audi', color: 'Black'),
       ],
       height: 173,
-      phone: 380661231236,
+      phone: '380661231236',
       sex: Sex.male,
       weight: 63,
     )
@@ -22,7 +20,12 @@ class UserService {
   List<User> get users => _users;
   void deleteUser(User user) => _users.remove(user);
   void addUser(User user) => _users.add(user);
-  void updatedUser(User user, int index) {
-    _users[index] = user;
+  void updatedUser(User user) {
+    final userIndex = _users
+        .indexWhere((specificUser) => user.fullName == specificUser.fullName);
+    // _users
+    //   ..remove(specificUser)
+    //   ..add(user);
+    _users.replaceRange(userIndex, userIndex + 1, [user]);
   }
 }

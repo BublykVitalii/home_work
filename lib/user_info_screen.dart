@@ -1,31 +1,44 @@
 import 'package:flutter/material.dart';
 
-import 'package:user_manager/main.dart';
+import 'package:user_manager/user.dart';
 import 'package:user_manager/user_service.dart';
 
-import 'user.dart';
-
-class UserInfo extends StatefulWidget {
+class UserInfoScreen extends StatefulWidget {
   final User user;
-  final ValueChanged<User> onAdd;
-  const UserInfo({
+  final ValueChanged<User> onUpdate;
+  final UserService service;
+
+  const UserInfoScreen({
     Key? key,
     required this.user,
-    required this.onAdd,
+    required this.onUpdate,
+    required this.service,
   }) : super(key: key);
 
   @override
-  State<UserInfo> createState() => _UserInfoState();
+  State<UserInfoScreen> createState() => _UserInfoScreenState();
 }
 
-class _UserInfoState extends State<UserInfo> {
+class _UserInfoScreenState extends State<UserInfoScreen> {
   String firstName = '';
   String lastName = '';
-  int? phone;
+  String? phone;
   int? age;
   double? height;
   double? weight;
-  String sex = '';
+  Sex? sex;
+  List<Car>? cars;
+  @override
+  void initState() {
+    firstName = widget.user.firstName;
+    lastName = widget.user.lastName;
+    age = widget.user.age;
+    phone = widget.user.phone;
+    height = widget.user.height;
+    weight = widget.user.weight;
+    cars = widget.user.cars;
+    sex = widget.user.sex;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +49,16 @@ class _UserInfoState extends State<UserInfo> {
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: () {
-              widget.onAdd(
+              // widget.service.updatedUser
+              widget.onUpdate(
                 User(
-                  firstName:
-                      firstName.isNotEmpty ? firstName : widget.user.firstName,
-                  lastName:
-                      lastName.isNotEmpty ? lastName : widget.user.lastName,
-                  age: age != null ? age : widget.user.age,
-                  phone: phone != null ? phone : widget.user.phone,
-                  height: height != null ? height : widget.user.height,
-                  weight: weight != null ? weight : widget.user.weight,
-                  cars: [Car(name: '', color: '')],
+                  firstName: firstName,
+                  lastName: lastName,
+                  age: age,
+                  phone: phone,
+                  height: height,
+                  weight: weight,
+                  cars: cars,
                 ),
               );
               Navigator.pop(context);
@@ -63,51 +75,47 @@ class _UserInfoState extends State<UserInfo> {
               child: Image.asset('assets/images/image.png'),
             ),
             TextFieldWidget(
-              onChangedText: (String value) {
+              onChangedText: (value) {
                 firstName = value;
               },
               initialText: widget.user.firstName,
               textHint: 'name',
             ),
             TextFieldWidget(
-              onChangedText: (String value) {
+              onChangedText: (value) {
                 lastName = value;
               },
               initialText: widget.user.lastName,
               textHint: 'name',
             ),
             TextFieldWidget(
-              onChangedText: (String value) {
-                phone = int.tryParse(value);
-              },
-              initialText: widget.user.phone?.toString(),
+              onChangedText: (value) => phone = value,
+              initialText: widget.user.phone,
               textHint: 'number phone',
             ),
             TextFieldWidget(
-              onChangedText: (String value) {
-                age = int.tryParse(value);
-              },
-              initialText: widget.user.age?.toString(),
+              onChangedText: (value) => age = int.tryParse(value),
+              initialText: widget.user.age,
               textHint: 'age',
             ),
             TextFieldWidget(
-              onChangedText: (String value) {
-                height = double.tryParse(value);
-              },
-              initialText: widget.user.height?.toString(),
+              onChangedText: (value) => height = double.tryParse(value),
+              initialText: widget.user.height,
               textHint: 'height',
             ),
             TextFieldWidget(
-              onChangedText: (String value) {
-                weight = double.tryParse(value);
-              },
-              initialText: widget.user.weight?.toString(),
+              onChangedText: (value) => weight = double.tryParse(value),
+              initialText: widget.user.weight,
               textHint: 'weight',
             ),
+            DropDown(
+              initValue: sex,
+              onChangedSex: (Sex value) {},
+            ), // save update enum
             Flexible(
               child: ListView.separated(
                 itemBuilder: (context, index) {
-                  final car = widget.user.cars[index];
+                  final car = widget.user.cars?[index];
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -116,17 +124,17 @@ class _UserInfoState extends State<UserInfo> {
                         children: [
                           TextWidget(
                             title: 'Name car:',
-                            text: ' ${car.name}',
+                            text: ' ${car?.name}',
                           ),
                           TextWidget(
                             title: 'Color car:',
-                            text: ' ${car.color}',
+                            text: ' ${car?.color}',
                           ),
                         ],
                       ),
                       IconButton(
                         onPressed: () {
-                          setState(() => widget.user.deleteCar(car));
+                          setState(() => widget.user.deleteCar(car!));
                         },
                         icon: const Icon(Icons.delete),
                       ),
@@ -138,7 +146,7 @@ class _UserInfoState extends State<UserInfo> {
                     color: Colors.black54,
                   );
                 },
-                itemCount: widget.user.cars.length,
+                itemCount: widget.user.cars?.length ?? 0,
               ),
             ),
             const SizedBox(
@@ -150,7 +158,7 @@ class _UserInfoState extends State<UserInfo> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => showDialog<String>(
           context: context,
-          builder: (BuildContext context) => AddCars(
+          builder: (BuildContext context) => AddCarDialog(
             onAdd: (car) {
               setState(
                 () => widget.user.addCar(car),
@@ -202,48 +210,25 @@ class TextWidget extends StatelessWidget {
   }
 }
 
-class TextFieldWidget extends StatefulWidget {
+class TextFieldWidget<T> extends StatelessWidget {
   TextFieldWidget({
     Key? key,
     this.initialText,
     required this.textHint,
     required this.onChangedText,
   }) : super(key: key);
-  final String? initialText;
+  final T? initialText;
   final String textHint;
 
   final ValueChanged<String> onChangedText;
-
-  @override
-  State<TextFieldWidget> createState() => _TextFieldWidgetState();
-}
-
-class _TextFieldWidgetState extends State<TextFieldWidget> {
-  late TextEditingController _controller;
-
-  void _onListen() {
-    _controller.addListener(() {});
-  }
-
-  void _onButtomTap() {
-    _controller.addListener(() {
-      _onListen();
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = new TextEditingController(text: widget.initialText);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(14.0),
       child: TextFormField(
-        controller: _controller,
-        onChanged: ((value) => widget.onChangedText(value)),
+        initialValue: initialText?.toString() ?? '',
+        onChanged: ((value) => onChangedText(value)),
         style: const TextStyle(
           color: Colors.black,
           fontSize: 18,
@@ -251,7 +236,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         ),
         decoration: InputDecoration(
           isDense: true,
-          hintText: '${widget.textHint}',
+          hintText: '${textHint}',
           hintStyle: const TextStyle(
             color: Colors.black,
             fontSize: 16,
@@ -277,38 +262,54 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   }
 }
 
-class AddCars extends StatelessWidget {
-  String nameCar = '';
-  String colorCar = '';
+class AddCarDialog extends StatelessWidget {
   final ValueChanged<Car> onAdd;
-  AddCars({
+  AddCarDialog({
     Key? key,
     required this.onAdd,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String name = '';
+    String color = '';
+    final _formKey = GlobalKey<FormState>();
     return AlertDialog(
-      content: SingleChildScrollView(
-        child: Column(
-          children: [
-            TextField(
-              onChanged: (text) {
-                nameCar = text;
-              },
-              decoration: const InputDecoration(
-                label: Text('Name car'),
+      content: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter name car';
+                  }
+                  return null;
+                },
+                onChanged: (text) {
+                  name = text;
+                },
+                decoration: const InputDecoration(
+                  label: Text('Name car'),
+                ),
               ),
-            ),
-            TextField(
-              onChanged: (text) {
-                colorCar = text;
-              },
-              decoration: const InputDecoration(
-                label: Text('Color car'),
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter color car';
+                  }
+                  return null;
+                },
+                onChanged: (text) {
+                  color = text;
+                },
+                decoration: const InputDecoration(
+                  label: Text('Color car'),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       title: const Center(
@@ -322,11 +323,68 @@ class AddCars extends StatelessWidget {
         TextButton(
           child: const Text('Add'),
           onPressed: () {
-            onAdd(Car(name: nameCar, color: colorCar));
-            Navigator.pop(context);
+            if (_formKey.currentState!.validate()) {
+              onAdd(Car(name: name, color: color));
+              Navigator.pop(context);
+            }
           },
         ),
       ],
+    );
+  }
+}
+
+class DropDown extends StatefulWidget {
+  const DropDown({
+    Key? key,
+    required this.initValue,
+    required this.onChangedSex,
+  }) : super(key: key);
+  final Sex? initValue;
+  final ValueChanged<Sex> onChangedSex;
+  @override
+  _DropDownState createState() => _DropDownState();
+}
+
+class _DropDownState extends State<DropDown> {
+  String? dropdownvalue;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initValue != null) {
+      dropdownvalue = widget.initValue.toString();
+    }
+  }
+
+  var items = [
+    Sex.female.toString(),
+    Sex.male.toString()
+    // 'man',
+    // 'other',
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14.0),
+      child: DropdownButton(
+        isExpanded: true,
+        value: dropdownvalue ?? Sex.female.toString(),
+        icon: const Icon(Icons.keyboard_arrow_down),
+        items: items.map((String items) {
+          return DropdownMenuItem(
+            value: items,
+            child: Text(
+              items,
+              style: TextStyle(fontSize: 16),
+            ),
+          );
+        }).toList(),
+        onChanged: (String? newValue) {
+          setState(() {
+            dropdownvalue = newValue!;
+          });
+        },
+      ),
     );
   }
 }
