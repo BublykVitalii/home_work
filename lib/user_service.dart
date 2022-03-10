@@ -14,6 +14,7 @@ class UserService {
       phone: '380661231236',
       sex: Sex.male,
       weight: 63,
+      id: 1,
     )
   ];
 
@@ -21,8 +22,14 @@ class UserService {
   void deleteUser(User user) => _users.remove(user);
   void addUser(User user) => _users.add(user);
   void updatedUser(User user) {
-    final userIndex = _users
-        .indexWhere((specificUser) => user.fullName == specificUser.fullName);
+    final userIndex = _users.indexWhere(
+      (specificUser) {
+        print(specificUser.id);
+        return user.id == specificUser.id;
+      },
+    );
+    print(user.id);
+
     // _users
     //   ..remove(specificUser)
     //   ..add(user);

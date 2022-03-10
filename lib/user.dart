@@ -1,4 +1,4 @@
-enum Sex { male, female }
+enum Sex { male, female, other }
 
 class User {
   final String firstName;
@@ -9,6 +9,7 @@ class User {
   final double? weight;
   final List<Car>? cars;
   final String? phone;
+  final int? id;
 
   User({
     required this.firstName,
@@ -19,6 +20,7 @@ class User {
     this.weight,
     this.cars,
     this.phone,
+    this.id,
   });
 
   String get fullName => '$firstName $lastName';
@@ -26,9 +28,23 @@ class User {
   void deleteCar(Car car) => cars?.remove(car);
   // void updateUser(User user){}
 
+  static String parseEnumToString(Sex sex) {
+    switch (sex) {
+      case Sex.female:
+        return 'Female';
+
+      case Sex.male:
+        return 'Male';
+
+      case Sex.other:
+      default:
+        return 'Other';
+    }
+  }
+
   @override
   String toString() {
-    return 'User(firstName: $firstName, lastName: $lastName, age: $age, sex: $sex, height: $height, weight: $weight, cars: $cars, phone: $phone)';
+    return 'User(firstName: $firstName, lastName: $lastName, age: $age, sex: $sex, height: $height, weight: $weight, cars: $cars, phone: $phone, id: $id,)';
   }
 }
 

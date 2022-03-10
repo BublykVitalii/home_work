@@ -59,6 +59,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   height: height,
                   weight: weight,
                   cars: cars,
+                  sex: sex,
+                  id: widget.user.id,
                 ),
               );
               Navigator.pop(context);
@@ -78,14 +80,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               onChangedText: (value) {
                 firstName = value;
               },
-              initialText: widget.user.firstName,
+              initialText: firstName,
               textHint: 'name',
             ),
             TextFieldWidget(
               onChangedText: (value) {
                 lastName = value;
               },
-              initialText: widget.user.lastName,
+              initialText: lastName,
               textHint: 'name',
             ),
             TextFieldWidget(
@@ -110,7 +112,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             ),
             DropDown(
               initValue: sex,
-              onChangedSex: (Sex value) {},
+              onChangedSex: (Sex value) => sex = value,
             ), // save update enum
             Flexible(
               child: ListView.separated(
@@ -347,42 +349,43 @@ class DropDown extends StatefulWidget {
 }
 
 class _DropDownState extends State<DropDown> {
-  String? dropdownvalue;
+  Sex? dropDownValue;
   @override
   void initState() {
     super.initState();
     if (widget.initValue != null) {
-      dropdownvalue = widget.initValue.toString();
+      dropDownValue = widget.initValue;
     }
   }
 
   var items = [
-    Sex.female.toString(),
-    Sex.male.toString()
-    // 'man',
-    // 'other',
+    Sex.female,
+    Sex.male,
+    Sex.other,
   ];
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14.0),
-      child: DropdownButton(
+      child: DropdownButton<Sex>(
         isExpanded: true,
-        value: dropdownvalue ?? Sex.female.toString(),
+        value: dropDownValue ?? Sex.other,
         icon: const Icon(Icons.keyboard_arrow_down),
-        items: items.map((String items) {
+        items: items.map((Sex item) {
           return DropdownMenuItem(
-            value: items,
+            value: item,
             child: Text(
-              items,
-              style: TextStyle(fontSize: 16),
+              User.parseEnumToString(item),
+              style: const TextStyle(fontSize: 16),
             ),
           );
         }).toList(),
-        onChanged: (String? newValue) {
+        onChanged: (newValue) {
           setState(() {
-            dropdownvalue = newValue!;
+            dropDownValue = newValue;
           });
+          widget.onChangedSex(newValue!);
         },
       ),
     );

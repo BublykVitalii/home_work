@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:user_manager/user.dart';
+import 'package:user_manager/user_cars_screen.dart';
 import 'package:user_manager/user_info_screen.dart';
 import 'package:user_manager/user_service.dart';
 
@@ -13,20 +14,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'User'),
+    return const MaterialApp(
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const MyHomePage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -45,7 +42,40 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('User'),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('Drawer Header'),
+            ),
+            ListTile(
+              title: const Text('User'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            Container(
+              height: 2,
+              color: Colors.grey.shade200,
+            ),
+            ListTile(
+              title: const Text('Cars'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                      builder: (context) => const UserCars()),
+                );
+              },
+            ),
+          ],
+        ),
       ),
       body: users.isNotEmpty
           ? UserTiles(
@@ -66,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onAdd: (value) {
               setState(() => userService.addUser(value));
             },
+            usersLength: userService.users.length,
           ),
         ),
         child: const Icon(Icons.add),
@@ -149,13 +180,19 @@ class NoUsersTiles extends StatelessWidget {
 
 class AddUserDialog extends StatelessWidget {
   final ValueChanged<User> onAdd;
+  final int usersLength;
 
-  const AddUserDialog({Key? key, required this.onAdd}) : super(key: key);
+  const AddUserDialog({
+    Key? key,
+    required this.onAdd,
+    required this.usersLength,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     String firstName = '';
     String lastName = '';
+
     final _formKey = GlobalKey<FormState>();
     return AlertDialog(
       title: const Center(
@@ -212,6 +249,7 @@ class AddUserDialog extends StatelessWidget {
                   firstName: firstName,
                   lastName: lastName,
                   cars: [],
+                  id: usersLength + 1,
                 ),
               );
               Navigator.pop(context);
