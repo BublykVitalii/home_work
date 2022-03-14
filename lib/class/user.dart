@@ -1,3 +1,5 @@
+import 'package:user_manager/class/car.dart';
+
 enum Sex { male, female, other }
 
 class User {
@@ -46,15 +48,4 @@ class User {
   String toString() {
     return 'User(firstName: $firstName, lastName: $lastName, age: $age, sex: $sex, height: $height, weight: $weight, cars: $cars, phone: $phone, id: $id,)';
   }
-}
-
-class Car {
-  final String owner;
-  final String name;
-  final String color;
-  Car({
-    required this.owner,
-    required this.name,
-    required this.color,
-  });
 }

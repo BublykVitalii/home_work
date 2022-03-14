@@ -1,4 +1,5 @@
-import 'package:user_manager/user.dart';
+import 'package:user_manager/class/car.dart';
+import 'package:user_manager/class/user.dart';
 
 class UserService {
   final _users = <User>[
@@ -29,23 +30,12 @@ class UserService {
       },
     );
 
-    // _users
-    //   ..remove(specificUser)
-    //   ..add(user);
     _users.replaceRange(userIndex, userIndex + 1, [user]);
   }
 
   List<Car> getListCars() {
-    // List<Car> biba = [];
-    // _users.forEach((user) {
-    //   final cars = user.cars ?? [];
-    //   biba.addAll(cars);
-    // });
-    // print(biba.first.name);
-    // return biba;
     List<Car> listCars = [];
     for (var n in _users) {
-      // listCars.addAll(n.cars ?? []);
       final cars = n.cars ?? [];
       for (var car in cars) {
         listCars.add(
