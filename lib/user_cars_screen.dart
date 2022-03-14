@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:user_manager/main.dart';
 import 'package:user_manager/user.dart';
 
 class UserCars extends StatelessWidget {
@@ -17,10 +16,8 @@ class UserCars extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute<void>(builder: (context) => MyApp()),
-            );
+            Navigator.pop(context);
+            Navigator.pop(context);
           },
         ),
         title: const Text('User Cars'),
@@ -64,7 +61,7 @@ class UserCars extends StatelessWidget {
           },
           itemCount: userCars.length,
           separatorBuilder: (BuildContext context, int index) {
-            return SizedBox();
+            return const SizedBox();
           },
         ),
       ),

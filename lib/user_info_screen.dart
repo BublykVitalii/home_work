@@ -39,6 +39,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     weight = widget.user.weight;
     cars = widget.user.cars;
     sex = widget.user.sex;
+    super.initState();
   }
 
   @override
