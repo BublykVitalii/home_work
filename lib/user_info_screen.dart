@@ -28,6 +28,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   double? weight;
   Sex? sex;
   List<Car>? cars;
+
   @override
   void initState() {
     firstName = widget.user.firstName;
@@ -326,7 +327,7 @@ class AddCarDialog extends StatelessWidget {
           child: const Text('Add'),
           onPressed: () {
             if (_formKey.currentState!.validate()) {
-              onAdd(Car(name: name, color: color));
+              onAdd(Car(name: name, color: color, owner: ''));
               Navigator.pop(context);
             }
           },

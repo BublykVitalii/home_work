@@ -67,10 +67,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('Cars'),
               onTap: () {
+                final cars = userService.getListCars();
                 Navigator.push(
                   context,
                   MaterialPageRoute<void>(
-                      builder: (context) => const UserCars()),
+                    builder: (context) => UserCars(
+                      userCars: cars,
+                    ),
+                  ),
                 );
               },
             ),
