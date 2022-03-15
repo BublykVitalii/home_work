@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
-import 'package:user_manager/class/user_service.dart';
-
-import 'package:user_manager/screens/user_cars_screen.dart';
-import 'package:user_manager/screens/user_screen.dart';
+import 'package:user_manager/features/user/user_screen.dart';
+import 'package:user_manager/models/user_service.dart';
+import 'package:user_manager/features/user_cars_screen.dart';
 
 class DrawerMenu extends StatefulWidget {
   final UserService userService;
@@ -31,7 +29,9 @@ class _DrawerMenuState extends State<DrawerMenu> {
           ),
           ListTile(
             title: const Text('User'),
-            onTap: () => _onTapDrawer(UserScreen.getRoute(widget.userService)),
+            onTap: () => _onTapDrawer(
+              UserScreen.getRoute(widget.userService),
+            ),
           ),
           Container(
             height: 2,
@@ -39,7 +39,9 @@ class _DrawerMenuState extends State<DrawerMenu> {
           ),
           ListTile(
             title: const Text('Cars'),
-            onTap: () => _onTapDrawer(UserCars.getRoute(widget.userService)),
+            onTap: () => _onTapDrawer(
+              UserCars.getRoute(widget.userService),
+            ),
           ),
         ],
       ),

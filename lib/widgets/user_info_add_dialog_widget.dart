@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:user_manager/class/car.dart';
+import 'package:user_manager/models/car.dart';
 
 class UserInfoAddDialog extends StatelessWidget {
   final ValueChanged<Car> onAdd;

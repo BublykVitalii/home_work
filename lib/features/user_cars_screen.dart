@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:user_manager/class/car.dart';
-
-import 'package:user_manager/class/user_service.dart';
+import 'package:user_manager/models/car.dart';
+import 'package:user_manager/models/user_service.dart';
 import 'package:user_manager/widgets/drawer_menu_widget.dart';
 
 class UserCars extends StatefulWidget {

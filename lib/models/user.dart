@@ -1,4 +1,4 @@
-import 'package:user_manager/class/car.dart';
+import 'package:user_manager/models/car.dart';
 
 enum Sex { male, female, other }
 
@@ -28,7 +28,6 @@ class User {
   String get fullName => '$firstName $lastName';
   void addCar(Car car) => cars?.add(car);
   void deleteCar(Car car) => cars?.remove(car);
-  // void updateUser(User user){}
 
   static String parseEnumToString(Sex sex) {
     switch (sex) {

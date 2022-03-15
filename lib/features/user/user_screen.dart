@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'package:user_manager/class/user.dart';
-import 'package:user_manager/class/user_service.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:user_manager/features/user/cubit/user_cubit.dart';
+import 'package:user_manager/models/user.dart';
+import 'package:user_manager/models/user_service.dart';
 import 'package:user_manager/widgets/drawer_menu_widget.dart';
 import 'package:user_manager/widgets/user_screen_add_user_dialog_widget.dart';
 import 'package:user_manager/widgets/user_screen_no_user_tiles_widget.dart';
@@ -32,8 +32,10 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
   late final List<User> users;
   late final UserService userService;
+  UserCubit get userCubit => BlocProvider.of<UserCubit>(context);
   @override
   void initState() {
+    userCubit.getUsers();
     userService = widget.userService;
     users = userService.users;
     super.initState();
@@ -52,7 +54,8 @@ class _UserScreenState extends State<UserScreen> {
           ? UserTiles(
               users: users,
               onPressed: (user) {
-                setState(() => userService.deleteUser(user));
+                setState(() => userCubit.removeUser(user));
+                //setState(() => userService.deleteUser(user));
               },
               service: userService,
               onChangedUser: (User value, i) {
@@ -61,15 +64,20 @@ class _UserScreenState extends State<UserScreen> {
             )
           : NoUsersTiles(title: 'No Users'),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => AddUserDialog(
-            onAdd: (value) {
-              setState(() => userService.addUser(value));
-            },
-            usersLength: userService.users.length,
-          ),
-        ),
+        onPressed: () {
+          //userCubit.getUsers();
+          showDialog<String>(
+            context: context,
+            builder: (BuildContext context) => AddUserDialog(
+              onAdd: (value) {
+                setState(() => userCubit.addUser(value));
+
+                //setState(() => userService.addUser(value));
+              },
+              usersLength: userService.users.length,
+            ),
+          );
+        },
         child: const Icon(Icons.add),
       ),
     );

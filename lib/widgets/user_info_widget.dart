@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:user_manager/class/car.dart';
-import 'package:user_manager/class/user.dart';
+import 'package:user_manager/models/car.dart';
+import 'package:user_manager/models/user.dart';
 
 class TextWidget extends StatelessWidget {
   const TextWidget({

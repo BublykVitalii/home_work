@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:user_manager/class/user.dart';
-import 'package:user_manager/class/user_service.dart';
-import 'package:user_manager/screens/user_info_screen.dart';
+import 'package:user_manager/models/user.dart';
+import 'package:user_manager/models/user_service.dart';
+import 'package:user_manager/features/user/user_info_screen.dart';
 
 class UserTiles extends StatelessWidget {
   final List<User> users;

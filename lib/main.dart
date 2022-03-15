@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:user_manager/class/user_service.dart';
-import 'package:user_manager/screens/user_screen.dart';
+import 'package:user_manager/features/user/cubit/user_cubit.dart';
+import 'package:user_manager/models/user_service.dart';
+import 'package:user_manager/features/user/user_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,9 +19,12 @@ class _MyAppState extends State<MyApp> {
   final userService = UserService();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: UserScreen(
-        userService: userService,
+    return BlocProvider(
+      create: (context) => UserCubit(),
+      child: MaterialApp(
+        home: UserScreen(
+          userService: userService,
+        ),
       ),
     );
   }

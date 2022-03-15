@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:user_manager/class/user.dart';
+import 'package:user_manager/models/user.dart';
 
 class UserInfoDropDown extends StatefulWidget {
   const UserInfoDropDown({
