@@ -50,29 +50,32 @@ class _UserScreenState extends State<UserScreen> {
       appBar: AppBar(
         title: const Text('User'),
       ),
-      body: users.isNotEmpty
-          ? UserTiles(
-              users: users,
-              onPressed: (user) {
-                setState(() => userCubit.removeUser(user));
-                //setState(() => userService.deleteUser(user));
-              },
-              service: userService,
-              onChangedUser: (User value, i) {
-                setState(() => userService.updatedUser(value));
-              },
-            )
-          : NoUsersTiles(title: 'No Users'),
+      body: BlocBuilder<UserCubit, UserState>(
+        builder: (context, state) {
+          if (state is UserLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is UserSuccess) {
+            return state.users.isNotEmpty
+                ? UserTiles(
+                    users: state.users,
+                    onPressed: (user) {
+                      userCubit.deleteUser(user);
+                    },
+                  )
+                : NoUsersTiles(title: 'No Users');
+          }
+          return const SizedBox();
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //userCubit.getUsers();
           showDialog<String>(
             context: context,
             builder: (BuildContext context) => AddUserDialog(
               onAdd: (value) {
-                setState(() => userCubit.addUser(value));
-
-                //setState(() => userService.addUser(value));
+                userCubit.addUser(value);
               },
               usersLength: userService.users.length,
             ),

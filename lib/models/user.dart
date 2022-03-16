@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'package:user_manager/models/car.dart';
 
 enum Sex { male, female, other }
@@ -46,5 +48,34 @@ class User {
   @override
   String toString() {
     return 'User(firstName: $firstName, lastName: $lastName, age: $age, sex: $sex, height: $height, weight: $weight, cars: $cars, phone: $phone, id: $id,)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is User &&
+        other.firstName == firstName &&
+        other.lastName == lastName &&
+        other.age == age &&
+        other.sex == sex &&
+        other.height == height &&
+        other.weight == weight &&
+        listEquals(other.cars, cars) &&
+        other.phone == phone &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode {
+    return firstName.hashCode ^
+        lastName.hashCode ^
+        age.hashCode ^
+        sex.hashCode ^
+        height.hashCode ^
+        weight.hashCode ^
+        cars.hashCode ^
+        phone.hashCode ^
+        id.hashCode;
   }
 }

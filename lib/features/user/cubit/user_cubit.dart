@@ -34,38 +34,70 @@ class UserCubit extends Cubit<UserState> {
     });
   }
 
-  void removeUser(User user) {
-    final removeUser = _users..remove(user);
+  void deleteUser(User user) {
     emit(UserLoading());
+    _users.remove(user);
+    print('>>>>>$user');
     Future.delayed(const Duration(seconds: 2), () {
       print('loading delete  user');
-      emit(UserSuccess(users: removeUser));
-      print(' user delete');
+      emit(UserSuccess(users: _users));
+      print(' $deleteUser');
     });
   }
 
   void addUser(User user) {
-    final addUser = _users..add(user);
     emit(UserLoading());
+    _users.add(user);
     Future.delayed(const Duration(seconds: 2), () {
       print('loading add user');
-      emit(UserSuccess(users: addUser));
+      emit(UserSuccess(users: _users));
       print(' user add');
     });
   }
 
   void updateUser(User user) {
     emit(UserLoading());
-    Future.delayed(const Duration(seconds: 2), () {
-      print('loading for update');
-    });
     final userIndex = _users.indexWhere(
       (specificUser) {
         return user.id == specificUser.id;
       },
     );
     _users.replaceRange(userIndex, userIndex + 1, [user]);
-    emit(UserSuccess(users: _users));
+    Future.delayed(const Duration(seconds: 2), () {
+      print('loading for update');
+      emit(UserSuccess(users: _users));
+    });
+
     print(' user update');
+  }
+
+  List<Car> getListCarUser() {
+    emit(UserLoading());
+    List<Car> listCars = [];
+    for (var n in _users) {
+      final cars = n.cars ?? [];
+      for (var car in cars) {
+        listCars.add(
+          Car(owner: n.fullName, name: car.name, color: car.color),
+        );
+      }
+    }
+    Future.delayed(const Duration(seconds: 2), () {
+      print('loading for update list car');
+      emit(UserSuccess(users: _users));
+      print(' List car update');
+    });
+
+    return listCars;
+  }
+
+  void deleteCarUser(User user) {
+    emit(UserLoading());
+    _users.remove(user.cars);
+    Future.delayed(const Duration(seconds: 2), () {
+      print('loading delete user');
+      emit(UserSuccess(users: _users));
+      print(' delete car ');
+    });
   }
 }

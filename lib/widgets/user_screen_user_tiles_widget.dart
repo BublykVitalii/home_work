@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:user_manager/models/user.dart';
-import 'package:user_manager/models/user_service.dart';
+
 import 'package:user_manager/features/user/user_info_screen.dart';
 
 class UserTiles extends StatelessWidget {
   final List<User> users;
   final ValueChanged<User> onPressed;
-  final UserService service;
-  final Function(User user, int index) onChangedUser;
 
   const UserTiles({
     Key? key,
     required this.users,
     required this.onPressed,
-    required this.service,
-    required this.onChangedUser,
   }) : super(key: key);
 
   @override
@@ -29,11 +25,8 @@ class UserTiles extends StatelessWidget {
               context,
               MaterialPageRoute<void>(
                 builder: (context) => UserInfoScreen(
-                    user: user,
-                    service: service,
-                    onUpdate: (user) {
-                      onChangedUser(user, index);
-                    }),
+                  user: user,
+                ),
               ),
             );
           },
