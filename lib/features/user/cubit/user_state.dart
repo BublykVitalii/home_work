@@ -8,9 +8,11 @@ class UserInitial extends UserState {}
 class UserLoading extends UserState {}
 
 class UserSuccess extends UserState {
-  final List<User> users;
+  final List<User>? users;
+  final List<Car>? cars;
   UserSuccess({
-    required this.users,
+    this.users,
+    this.cars,
   });
 }
 

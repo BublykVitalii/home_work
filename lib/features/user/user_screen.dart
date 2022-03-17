@@ -57,9 +57,10 @@ class _UserScreenState extends State<UserScreen> {
               child: CircularProgressIndicator(),
             );
           } else if (state is UserSuccess) {
-            return state.users.isNotEmpty
+            List<User> users = state.users ?? [];
+            return users.isNotEmpty
                 ? UserTiles(
-                    users: state.users,
+                    users: users,
                     onPressed: (user) {
                       userCubit.deleteUser(user);
                     },

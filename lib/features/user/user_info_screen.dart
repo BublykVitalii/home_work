@@ -110,22 +110,22 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   ),
                   UserInfoTextFieldWidget(
                     onChangedText: (value) => phone = value,
-                    initialText: widget.user.phone,
+                    initialText: phone,
                     textHint: 'number phone',
                   ),
                   UserInfoTextFieldWidget(
                     onChangedText: (value) => age = int.tryParse(value),
-                    initialText: widget.user.age,
+                    initialText: age,
                     textHint: 'age',
                   ),
                   UserInfoTextFieldWidget(
                     onChangedText: (value) => height = double.tryParse(value),
-                    initialText: widget.user.height,
+                    initialText: height,
                     textHint: 'height',
                   ),
                   UserInfoTextFieldWidget(
                     onChangedText: (value) => weight = double.tryParse(value),
-                    initialText: widget.user.weight,
+                    initialText: weight,
                     textHint: 'weight',
                   ),
                   UserInfoDropDown(
@@ -153,6 +153,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ),
                             IconButton(
                               onPressed: () {
+                                // userCubit.deleteCarUser(car);
                                 setState(() => widget.user.deleteCar(car));
                               },
                               icon: const Icon(Icons.delete),
